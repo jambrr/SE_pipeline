@@ -55,8 +55,8 @@
     - name: Run the repository setup script.
       command: sh /home/vagrant/scripts/setup-repository.sh
 
-    - name: Retrieve GitLab runner registration token
-      shell: gitlab-runner register --print-registration-token
+    - name: Retrieve GitLab runner registration token using GitLab Rails
+      shell: gitlab-rails runner -e production "puts Gitlab::CurrentSettings.current_application_settings.runners_registration_token"
       register: gitlab_runner_registration_token_result
 
     - name: Store GitLab runner registration token
