@@ -41,7 +41,7 @@
         dest: /home/vagrant/
 
     - name: Create artefact-repository directory
-      command: mkdir /home/vagrant/artefact-repository
+      command: mkdir /home/vagrant/artefact-repository mode=0777
 
     - name: Transfer the provision scripts to automate the process
       copy: src=../scripts dest=/home/vagrant/ mode=0777
@@ -55,8 +55,8 @@
     - name: Run the repository setup script.
       command: sh /home/vagrant/scripts/setup-repository.sh
 
-    - name: Retrieve GitLab runner registration token using GitLab Rails
-      shell: gitlab-rails runner -e production "puts Gitlab::CurrentSettings.current_application_settings.runners_registration_token"
+    - name: Retrieve GitLab runner registration token
+      shell: gitlab-runner register --print-registration-token
       register: gitlab_runner_registration_token_result
 
     - name: Store GitLab runner registration token
