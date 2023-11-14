@@ -41,7 +41,10 @@
         dest: /home/vagrant/
 
     - name: Create artefact-repository directory
-      command: mkdir /home/vagrant/artefact-repository mode=0777
+      file:
+        path: /home/vagrant/artefact-repository
+        state: directory
+        mode: 0777
 
     - name: Transfer the provision scripts to automate the process
       copy: src=../scripts dest=/home/vagrant/ mode=0777
@@ -55,8 +58,8 @@
     - name: Run the repository setup script.
       command: sh /home/vagrant/scripts/setup-repository.sh
 
-    - name: Retrieve GitLab runner registration token
-      shell: gitlab-runner register --print-registration-token
+    - name: Retrieve GitLab runner registration token using GitLab Rails
+      shell: gitlab-rails runner -e production "puts Gitlab::CurrentSettings.current_application_settings.runners_registration_token"
       register: gitlab_runner_registration_token_result
 
     - name: Store GitLab runner registration token
@@ -70,11 +73,23 @@
           --non-interactive \
           --url "http://192.168.33.9/gitlab" \
           --r "{{ gitlab_runner_token }}" \
-          --description "my-runner" \
-          --tag-list "docker" \
+          --description "docker runner" \
+          --tag-list "integration" \
           --executor "docker" \
           --docker-image alpine:latest \
           --run-untagged="true"
+
+    - name: Create GitLab integration-shell runner
+      become: yes
+      shell: |
+        sudo gitlab-runner register \
+          --non-interactive \
+          --url "http://192.168.33.9/gitlab" \
+          --r "{{ gitlab_runner_token }}" \
+          --description "integration runner" \
+          --tag-list "integration-shell" \
+          --executor "shell" \
+          --run-untagged="true" 
 
     - name: Run the gitlab runner setup script.
       command: sh /home/vagrant/scripts/setup-gitlab-runner.sh     

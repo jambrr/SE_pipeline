@@ -3,17 +3,16 @@
 # Define the content of the .gitlab-ci.yml file
 config_content=$(cat <<EOF
 image: gradle:6.7.1
-image: openjdk:8
 
 stages:
   - build
   - test
-  - run
+  - upload
   - deploy
 
 cache:
   paths:
-    - lu.uni.e4l.platform.api.dev/target/
+    - lu.uni.e4l.platform.api.dev/build/libs/
     - lu.uni.e4l.platform.api.dev/.gradle/
 
 build_app:
@@ -31,21 +30,25 @@ test_app:
     - cd lu.uni.e4l.platform.api.dev/
     - ./gradlew test
 
-run_app:
-  stage: run
-  script:
-    - cd lu.uni.e4l.platform.api.dev/
-    - gradle package
-    - gradle exec:java -Dexec.mainClass="com.jcg.maven.App"
+upload_app:
+    stage: upload
+    tags:
+    - integration
+    script:
+    - echo "Deploy review app"
+    artifacts:
+        name: "my-app"
+        paths:
+        - build/libs/*.jar
 
 deploy:
     stage: deploy
     tags:
-    - docker
+    - shell
     script:
     - cd lu.uni.e4l.platform.api.dev/
-    - sudo mkdir /home/vagrant/artefact
-    - sudo cp build/libs/*.jar /home/vagrant/artefact
+    - cp build/libs/*.jar /home/vagrant/artefact-repository
+
 
 EOF
 )
