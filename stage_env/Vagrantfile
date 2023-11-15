@@ -31,9 +31,40 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   
   config.vm.provision "shell", inline: <<-SHELL
      	sudo apt-get update
-     	sudo apt-get install --yes python
-	
-	mkdir /home/vagrant/stage
+
+	echo "Install default Java and OpenJDK"
+  sudo apt install default-jre -y
+  sudo apt-get install openjdk-8-jdk -y
+  
+  echo "Install MySql server"
+  export DEBIAN_FRONTEND="noninteractive"
+  sudo debconf-set-selections <<< "mysql-server mysql-server/root_password password 12345678"
+  sudo debconf-set-selections <<< "mysql-server mysql-server/root_password_again password 12345678"
+  sudo apt-get install -y mysql-server
+  sudo apt-get install make
+  
+  # Install Node.js 15.14.0
+  curl -fsSL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | sudo gpg --dearmor -o /usr/share/keyrings/nodesource-archive-keyring.gpg
+  echo "deb [signed-by=/usr/share/keyrings/nodesource-archive-keyring.gpg] https://deb.nodesource.com/node_15.x bionic main" | sudo tee /etc/apt/sources.list.d/nodesource.list
+  echo "deb-src [signed-by=/usr/share/keyrings/nodesource-archive-keyring.gpg] https://deb.nodesource.com/node_15.x bionic main" | sudo tee -a /etc/apt/sources.list.d/nodesource.list
+  sudo apt-get update
+  sudo apt-get install -y nodejs
+  
+   sudo apt-get update
+      sudo apt-get install --yes python
+      # apt-get install -y default-jre
+    # apt-get install -y apache2
+    
+    sudo apt-get install gitlab-rails
+    
+    sudo apt-get install curl
+  curl -sS https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.deb.sh | sudo bash
+  sudo apt-get install gitlab-ee
+
+  curl -L https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh | sudo bash
+
+  sudo apt-get install gitlab-runner
+
    	SHELL
    
   

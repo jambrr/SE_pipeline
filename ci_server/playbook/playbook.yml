@@ -35,6 +35,15 @@
       command:
         cmd: gitlab-ctl reconfigure && gitlab-ctl restart unicorn && gitlab-ctl restart
 
+    - name: Transfer the provision scripts to automate the process
+      copy: src=../scripts dest=/home/vagrant/ mode=0777
+
+    #- name: Create ssh connection
+    #  command: sh /home/vagrant/scripts/ssh-connection.sh
+
+    - name: Create deploy script
+      command: sh /home/vagrant/scripts/deploy-proc.sh
+
     - name: Synchronize files
       synchronize:
         src: ../e4l
@@ -44,10 +53,13 @@
       file:
         path: /home/vagrant/artefact-repository
         state: directory
-        mode: 0777
+        mode: '0777'
 
-    - name: Transfer the provision scripts to automate the process
-      copy: src=../scripts dest=/home/vagrant/ mode=0777
+    - name: Create artefact-repository directory structure
+      file:
+        path: /home/vagrant/artefact-repository/frontend
+        state: directory
+        mode: '0777'
 
     - name: Run the gitlab configuration script.
       command: sh /home/vagrant/scripts/configure-gitlab.sh

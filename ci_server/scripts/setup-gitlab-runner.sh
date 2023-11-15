@@ -9,6 +9,9 @@ stages:
   - test
   - upload
   - deploy
+  - frontend-build
+  - frontend-upload
+  - frontend-deploy
 
 cache:
   paths:
@@ -30,6 +33,12 @@ test_app:
     - cd lu.uni.e4l.platform.api.dev/
     - ./gradlew test
 
+build_frontend:
+  stage: frontend-build
+  script:
+    - cd lu.uni.e4l.platform.frontend.dev/
+    - npm run build
+
 upload_app:
     stage: upload
     tags:
@@ -41,13 +50,32 @@ upload_app:
         paths:
         - build/libs/*.jar
 
+frontend_upload:
+    stage: frontend-upload
+    tags:
+    - integration
+    script:
+    - echo "Deploy review app"
+    artifacts:
+        name: "frontend"
+        paths:
+        - e4l.frontend/web/dist/*
+
 deploy:
     stage: deploy
     tags:
-    - shell
+    - integration-shell
     script:
     - cd lu.uni.e4l.platform.api.dev/
     - cp build/libs/*.jar /home/vagrant/artefact-repository
+
+frontend_deploy:
+    stage: frontend-deploy
+    tags:
+    - integration-shell
+    script:
+    - cd lu.uni.e4l.platform.frontend.dev/
+    - cp -r e4l.frontend/web/dist/* /home/vagrant/artefact-repository/frontend
 
 
 EOF
