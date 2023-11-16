@@ -61,6 +61,9 @@
         state: directory
         mode: '0777'
 
+    - name: Create flag file in vagrant_data
+      shell: sudo echo "0" > /vagrant_data/flag_staging.txt
+
     - name: Run the gitlab configuration script.
       command: sh /home/vagrant/scripts/configure-gitlab.sh
 
@@ -71,7 +74,7 @@
       command: sh /home/vagrant/scripts/setup-repository.sh
 
     - name: Retrieve GitLab runner registration token using GitLab Rails
-      shell: gitlab-rails runner -e production "puts Gitlab::CurrentSettings.current_application_settings.runners_registration_token"
+      shell: sudo gitlab-rails runner -e production "puts Gitlab::CurrentSettings.current_application_settings.runners_registration_token"
       register: gitlab_runner_registration_token_result
 
     - name: Store GitLab runner registration token

@@ -26,6 +26,10 @@ build_app:
     - chmod +x gradlew
     - ./gradlew clean
     - ./gradlew build
+  artifacts:
+    name: "backend"
+    paths:
+    - lu.uni.e4l.platform.api.dev/build/libs/*.jar
 
 test_app:
   stage: test
@@ -39,17 +43,6 @@ build_frontend:
     - cd lu.uni.e4l.platform.frontend.dev/
     - npm run build
 
-upload_app:
-    stage: upload
-    tags:
-    - integration
-    script:
-    - echo "Deploy review app"
-    artifacts:
-        name: "my-app"
-        paths:
-        - build/libs/*.jar
-
 frontend_upload:
     stage: frontend-upload
     tags:
@@ -59,23 +52,21 @@ frontend_upload:
     artifacts:
         name: "frontend"
         paths:
-        - e4l.frontend/web/dist/*
+        - lu.uni.e4l.platform.frontend.dev/e4l.frontend/web/dist/*
 
 deploy:
     stage: deploy
     tags:
     - integration-shell
     script:
-    - cd lu.uni.e4l.platform.api.dev/
-    - cp build/libs/*.jar /home/vagrant/artefact-repository
+    - cp lu.uni.e4l.platform.api.dev/build/libs/*.jar /home/vagrant/artefact-repository
 
 frontend_deploy:
     stage: frontend-deploy
     tags:
     - integration-shell
     script:
-    - cd lu.uni.e4l.platform.frontend.dev/
-    - cp -r e4l.frontend/web/dist/* /home/vagrant/artefact-repository/frontend
+    - cp -r lu.uni.e4l.platform.frontend.dev/e4l.frontend/web/dist/* /home/vagrant/artefact-repository/frontend
 
 
 EOF
