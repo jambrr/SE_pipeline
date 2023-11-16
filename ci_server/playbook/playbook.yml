@@ -41,8 +41,8 @@
     #- name: Create ssh connection
     #  command: sh /home/vagrant/scripts/ssh-connection.sh
 
-    - name: Create deploy script
-      command: sh /home/vagrant/scripts/deploy-proc.sh
+    #- name: Create deploy script
+    #  command: sh /home/vagrant/scripts/deploy-proc.sh
 
     - name: Synchronize files
       synchronize:
@@ -104,4 +104,7 @@
           --run-untagged="true" 
 
     - name: Run the gitlab runner setup script.
-      command: sh /home/vagrant/scripts/setup-gitlab-runner.sh     
+      command: sh /home/vagrant/scripts/setup-gitlab-runner.sh  
+
+    - name: Create the shared folder file if it doesn't exist
+      shell: sudo echo "{{ gitlab_runner_token }}" > /vagrant_data/token.txt

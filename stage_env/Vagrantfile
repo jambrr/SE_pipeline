@@ -65,6 +65,19 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   sudo apt-get install gitlab-runner
 
+	gitlab_runner_token=$(cat /vagrant_data/token.txt)
+  	sudo apt-get update
+
+  sudo gitlab-runner register \
+      --non-interactive \
+      --url "http://192.168.33.9/gitlab" \
+      --r "$gitlab_runner_token" \
+      --description "staging" \
+      --tag-list "integration-shell" \
+      --executor "shell" \
+      --run-untagged="true"
+
+
    	SHELL
    
   
