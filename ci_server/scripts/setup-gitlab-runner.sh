@@ -50,7 +50,7 @@ deploy:
     tags:
     - integration-shell
     script:
-    - cp lu.uni.e4l.platform.api.dev/build/libs/*.jar /home/vagrant/shared/
+    - cp -rf lu.uni.e4l.platform.api.dev/build/libs/*.jar /home/vagrant/shared/
     - echo "1" > /home/vagrant/shared/flag_staging
 
 frontend_deploy:
@@ -58,7 +58,7 @@ frontend_deploy:
     tags:
     - integration-shell
     script:
-    - cp -r lu.uni.e4l.platform.frontend.dev/e4l.frontend/web/dist/* /home/vagrant/shared/frontend
+    - cp -rf lu.uni.e4l.platform.frontend.dev/e4l.frontend/web/dist/* /home/vagrant/shared/frontend
 
 
 EOF
