@@ -48,6 +48,7 @@ Vagrant.configure("2") do |config|
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
   config.vm.synced_folder "./data", "/vagrant_data"
+  config.vm.synced_folder "./data", "/home/vagrant/shared"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -71,20 +72,20 @@ Vagrant.configure("2") do |config|
   
   config.vm.provision "shell", inline: <<-SHELL
      	sudo apt-get update
-	     echo "Create ssh key"   
-	     ssh-keygen -t rsa -N '' -f /home/vagrant/.ssh/id_rsa_stage
+# 	     echo "Create ssh key"   
+# 	     ssh-keygen -t rsa -N '' -f /home/vagrant/.ssh/id_rsa_stage
 
-		ssh_config=$(cat <<EOF
-		        Host stage-vm
-		        User vagrant
-		        Hostname 192.168.33.7
-		        IdentityFile /home/vagrant/.ssh/id_rsa_stage
+# 		ssh_config=$(cat <<EOF
+# 		        Host stage-vm
+# 		        User vagrant
+# 		        Hostname 192.168.33.7
+# 		        IdentityFile /home/vagrant/.ssh/id_rsa_stage
 
-EOF
-)
+# EOF
+# )
 
-		echo "$ssh_config" > /home/vagrant/.ssh/config
-		mv /home/vagrant/.ssh/id_rsa_stage.pub /vagrant_data
+# 		echo "$ssh_config" > /home/vagrant/.ssh/config
+# 		#mv /home/vagrant/.ssh/id_rsa_stage.pub /vagrant_data
 # 		scp vagrant@192.168.33.7:/home/vagrant/.ssh/id_rsa_stage.pub /home/vagrant/.ssh/authorized_keys
 
 	echo "Install default Java and OpenJDK"

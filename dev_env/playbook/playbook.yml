@@ -10,7 +10,6 @@
     vHome: /home/vagrant
     local_directory: ../e4l
     remote_directory: /home/vagrant/e4l
-    gitlab_private_token: "ypCa3Dzb2365nvsixwPP"
 
   tasks:
     - include_role:
@@ -22,9 +21,19 @@
     - name: Reconfigure and restart GitLab
       command:
         cmd: gitlab-ctl reconfigure && gitlab-ctl restart unicorn && gitlab-ctl restart
+    
+    - name: Clone Git repository
+      git:
+        repo: http://vagrant:12345678@192.168.33.9/gitlab/vagrant/e4l.git
+        dest: /home/vagrant/e4l
 
+    - name: Set Git user email
+      command: git config --global user.email "vagrant@vagrant.com"
+
+    - name: Set Git user name
+      command: git config --global user.name "Vagrant"
     # - name: Transfer the provision scripts to automate the process
-      copy: src=../scripts dest=/home/vagrant/ mode=0777
+    #  copy: src=../scripts dest=/home/vagrant/ mode=0777
 
     #- name: Create ssh connection
     #  command: sh /home/vagrant/scripts/ssh-connection.sh
