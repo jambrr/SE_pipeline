@@ -41,10 +41,10 @@
     #- name: Create deploy script
     #  command: sh /home/vagrant/scripts/deploy-proc.sh
 
-    - name: Synchronize files
-      synchronize:
-        src: ../e4l
-        dest: /home/vagrant/
+    # - name: Synchronize files
+    #   synchronize:
+    #     src: ../e4l
+    #     dest: /home/vagrant/
 
     # - name: Run the gitlab configuration script.
     #   command: sh /home/vagrant/scripts/configure-gitlab.sh
